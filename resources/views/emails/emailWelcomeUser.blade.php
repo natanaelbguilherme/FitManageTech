@@ -24,7 +24,7 @@
                     Obrigado por escolher o nosso plano de assinatura {{ $description }}.</p>
                 <p>Aqui estão alguns benefícios que você pode aproveitar:</p>
                 <ul>
-                    <li>Cadastro de até {{ $limit }} estudantes.</li>
+                    <li>Cadastro de estudantes: {{ $limit > 0 ? $limit : 'Ilimitado' }}</li>
                     <li>Recursos premium e atualizações regulares.</li>
                     <li>Suporte prioritário da nossa equipe.</li>
                 </ul>
