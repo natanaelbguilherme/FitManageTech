@@ -22,7 +22,7 @@ class SendEmailWelcomeToUser extends Mailable
 
     public function __construct($name, $description, $limit)
     {
-        $this->name = $name;
+        $this->name = ucwords($name);
         $this->description = $description;
         $this->limit = $limit;
     }
