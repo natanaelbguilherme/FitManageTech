@@ -45,4 +45,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    public function plan()
+    {
+        return $this->hasOne(Plan::class, 'id', 'plan_id');
+    }
 }

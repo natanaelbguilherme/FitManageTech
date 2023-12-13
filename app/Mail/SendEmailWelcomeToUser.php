@@ -16,9 +16,15 @@ class SendEmailWelcomeToUser extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public $name;
+    public $description;
+    public $limit;
+
+    public function __construct($name, $description, $limit)
     {
-        //
+        $this->name = $name;
+        $this->description = $description;
+        $this->limit = $limit;
     }
 
     /**

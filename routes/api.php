@@ -10,3 +10,4 @@ Route::middleware('auth:sanctum')->group(function () {
 // rota pública
 
 Route::post('users', [UserController::class, 'store']);
+Route::get('users', [UserController::class, 'index']);

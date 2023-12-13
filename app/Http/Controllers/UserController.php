@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\SendEmailWelcomeToUser;
+use App\Models\Plan;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -27,8 +28,10 @@ class UserController extends Controller
 
             $user = User::create($data);
 
-            Mail::to('natanaelbguilherme@gmail.com', 'natanael')
-                ->send(new SendEmailWelcomeToUser());
+            $planType = Plan::find($user->plan_id);
+
+            Mail::to($user->email, $user->name)
+                ->send(new SendEmailWelcomeToUser($user->name, $planType->description, $planType->limit));
 
             return $user;
         } catch (Exception $exception) {
