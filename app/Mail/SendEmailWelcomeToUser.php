@@ -33,7 +33,7 @@ class SendEmailWelcomeToUser extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Bem Vindo ao ...!!!',
+            subject: 'Bem Vindo!!!',
         );
     }
 

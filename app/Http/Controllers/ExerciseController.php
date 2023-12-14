@@ -32,6 +32,7 @@ class ExerciseController extends Controller
 
             $user_id = $request->user()->id;
 
+
             $existExercise = Exercise::where('description', $data['description'])->where('user_id', $user_id)->count();
 
             if ($existExercise !== 0) return $this->error('este exercicio ja existe', Response::HTTP_CONFLICT);
