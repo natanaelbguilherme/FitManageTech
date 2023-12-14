@@ -15,6 +15,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('exercises', [ExerciseController::class, 'store']);
     Route::get('exercises', [ExerciseController::class, 'index']);
+    Route::delete('exercises/{id}', [ExerciseController::class, 'destroy']);
 });
 
 // rota pública
