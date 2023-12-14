@@ -14,6 +14,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index']);
 
     Route::post('exercises', [ExerciseController::class, 'store']);
+    Route::get('exercises', [ExerciseController::class, 'index']);
 });
 
 // rota pública
