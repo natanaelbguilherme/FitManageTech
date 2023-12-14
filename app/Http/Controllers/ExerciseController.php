@@ -14,9 +14,9 @@ class ExerciseController extends Controller
     {
         $user_id = $request->user()->id;
 
-        $exercices = Exercise::where('user_id', $user_id)->select('id', 'description')->get();
+        $exercises = Exercise::where('user_id', $user_id)->select('id', 'description')->get();
 
-        return $exercices;
+        return $exercises;
     }
 
     public function store(Request $request)
@@ -45,5 +45,26 @@ class ExerciseController extends Controller
         } catch (Exception $exception) {
             return $this->error($exception->getMessage(), Response::HTTP_BAD_REQUEST);
         }
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $user_id = $request->user()->id;
+
+        $exercise = Exercise::find($id);
+
+
+        // $count = Students::query()->where('exercise_id', $id)->count();
+
+        // if ($count !== 0) return $this->error('Existem alunos com este exercicio', Response::HTTP_CONFLICT);
+
+
+        if (!$exercise) return $this->error('Dado não encontrado', Response::HTTP_NOT_FOUND);
+
+        if ($exercise->user_id !== $user_id) return $this->error('voce nao pode excluir este dado', Response::HTTP_FORBIDDEN);
+
+        $exercise->delete();
+
+        return $this->response('', Response::HTTP_NO_CONTENT);
     }
 }
