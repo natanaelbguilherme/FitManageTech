@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\ValidateLimitToUser;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -18,7 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('exercises', [ExerciseController::class, 'index']);
     Route::delete('exercises/{id}', [ExerciseController::class, 'destroy']);
 
-    Route::post('students', [StudentController::class, 'store']);
+    Route::post('students', [StudentController::class, 'store'])->middleware(ValidateLimitToUser::class);
 });
 
 // rota pública

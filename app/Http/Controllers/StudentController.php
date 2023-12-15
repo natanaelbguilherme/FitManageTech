@@ -17,11 +17,14 @@ class StudentController extends Controller
 
             $data = $request->all();
 
+            $existStudent = Student::where('email', $data['email'])->orwhere('cpf', $data['cpf'])->count();
+            if ($existStudent !== 0) return $this->error('estudante ja cadastrado', Response::HTTP_CONFLICT);
+
             $request->validate([
                 'name' => 'string|required',
-                'email' => 'string|required',
+                'email' => 'string|required|unique:students',
                 'date_birth' => 'string|required',
-                'cpf' => 'string|required|max:14',
+                'cpf' => 'string|required|max:14|unique:students',
                 'cep' => 'string',
                 'street' => 'string',
                 'state' => 'string',
@@ -33,25 +36,6 @@ class StudentController extends Controller
             ]);
 
             $user_id = $request->user()->id;
-            $plan_id = $request->user()->plan_id;
-
-            $planType = Plan::find($plan_id);
-
-            $existStudent = Student::where('email', $data['email'])->orwhere('cpf', $data['cpf'])->count();
-
-            $count = Student::where('user_id', $user_id)->count();
-
-            if ($existStudent !== 0) return $this->error('estudante ja cadastrado', Response::HTTP_CONFLICT);
-
-
-            if ($planType->limit == 0) {
-                $student = Student::create([
-                    'user_id' => $user_id,
-                    ...$data
-                ]);
-            }
-
-            if ($count >= $planType->limit) return $this->error('voce atingiu o maximo de estudantes', Response::HTTP_FORBIDDEN);
 
             $student = Student::create([
                 'user_id' => $user_id,
