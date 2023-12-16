@@ -7,7 +7,6 @@ use App\Models\Student;
 use App\Models\Workout;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class WorkoutController extends Controller

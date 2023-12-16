@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Exercise;
 use App\Models\Plan;
+use App\Models\Student;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -12,16 +14,16 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $user = $request->user()->id;
+        $user_id = $request->user()->id;
 
         $plan = $request->user()->plan_id;
 
 
         try {
 
-            $registered_students = 0;
+            $registered_students = Student::where('user_id', $user_id)->count();
 
-            $registered_exercices = 0;
+            $registered_exercices = Exercise::where('user_id', $user_id)->count();
 
             $current_user_plan = Plan::find($plan);
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Exercise;
+use App\Models\Student;
+use App\Models\Workout;
 use Exception;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,10 +56,9 @@ class ExerciseController extends Controller
 
         $exercise = Exercise::find($id);
 
+        $count = Workout::query()->where('exercise_id', $id)->count();
 
-        // $count = Students::query()->where('exercise_id', $id)->count();
-
-        // if ($count !== 0) return $this->error('Existem alunos com este exercicio', Response::HTTP_CONFLICT);
+        if ($count !== 0) return $this->error('Existem alunos com este exercicio', Response::HTTP_CONFLICT);
 
 
         if (!$exercise) return $this->error('Dado não encontrado', Response::HTTP_NOT_FOUND);
