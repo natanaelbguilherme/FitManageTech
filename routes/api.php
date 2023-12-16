@@ -20,6 +20,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('exercises/{id}', [ExerciseController::class, 'destroy']);
 
     Route::post('students', [StudentController::class, 'store'])->middleware(ValidateLimitToUser::class);
+    Route::get('students', [StudentController::class, 'index']);
+    Route::delete('students/{id}', [StudentController::class, 'destroy']);
 });
 
 // rota pública

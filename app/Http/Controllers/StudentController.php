@@ -2,14 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Plan;
 use App\Models\Student;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class StudentController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $id = Auth::user()->id;
+
+        $search = $request->input('filter');
+
+        $students = Student::query()
+            ->where('user_id', $id)
+            ->where('name', 'ilike', "%$search%")
+            ->orWhere('cpf', 'ilike', "%$search%")
+            ->orWhere('email', 'ilike', "%$search%")
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return $students;
+    }
+
+
     public function store(Request $request)
     {
 
@@ -46,5 +65,20 @@ class StudentController extends Controller
         } catch (Exception $exception) {
             return $this->error($exception->getMessage(), Response::HTTP_BAD_REQUEST);
         }
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $user_id = $request->user()->id;
+
+        $student = Student::find($id);
+
+        if (!$student) return $this->error('Dado não encontrado', Response::HTTP_NOT_FOUND);
+
+        if ($student->user_id !== $user_id) return $this->error('voce nao pode excluir este dado', Response::HTTP_FORBIDDEN);
+
+        $student->delete();
+
+        return $this->response('', Response::HTTP_NO_CONTENT);
     }
 }
