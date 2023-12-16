@@ -66,4 +66,19 @@ class StudentController extends Controller
             return $this->error($exception->getMessage(), Response::HTTP_BAD_REQUEST);
         }
     }
+
+    public function destroy(Request $request, $id)
+    {
+        $user_id = $request->user()->id;
+
+        $student = Student::find($id);
+
+        if (!$student) return $this->error('Dado não encontrado', Response::HTTP_NOT_FOUND);
+
+        if ($student->user_id !== $user_id) return $this->error('voce nao pode excluir este dado', Response::HTTP_FORBIDDEN);
+
+        $student->delete();
+
+        return $this->response('', Response::HTTP_NO_CONTENT);
+    }
 }
