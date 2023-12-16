@@ -6,6 +6,7 @@ use App\Models\Student;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
 class StudentController extends Controller
@@ -50,8 +51,7 @@ class StudentController extends Controller
                 'netghborhood' => 'string',
                 'city' => 'string',
                 'number' => 'string',
-                'contact' => 'string|required|max:20'
-
+                'contact' => 'string|required|max:5'
             ]);
 
             $user_id = $request->user()->id;
@@ -80,5 +80,44 @@ class StudentController extends Controller
         $student->delete();
 
         return $this->response('', Response::HTTP_NO_CONTENT);
+    }
+
+
+    public function update($id, Request $request)
+    {
+        try {
+
+            $user_id = $request->user()->id;
+
+            $student = Student::find($id);
+
+            if (!$student) return $this->error('dado nao encontrado', Response::HTTP_BAD_REQUEST);
+
+            if ($student->user_id !== $user_id) return $this->error('voce nao pode editar este dado', Response::HTTP_FORBIDDEN);
+
+            $request->validate([
+                'cpf' => [
+                    'min:11',
+                    'max:14',
+                    Rule::unique('students')->ignore($student->id),
+                ],
+
+                'email' => [
+                    Rule::unique('students')->ignore($student->id),
+                ],
+
+                'contact' => [
+                    'required',
+                    'max:20',
+                    Rule::unique('students')->ignore($student->id),
+                ],
+            ]);
+
+            $student->update($request->all());
+
+            return $student;
+        } catch (Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], 400);
+        }
     }
 }
