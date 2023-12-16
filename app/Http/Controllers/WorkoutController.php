@@ -19,15 +19,22 @@ class WorkoutController extends Controller
 
             $data = $request->all();
 
-            $existStudent = Student::find($data['student_id']);
-            if (!$existStudent) return $this->error('estudante não encontrado', Response::HTTP_NOT_FOUND);
+            $user_id = $request->user()->id;
+
+            $student = Student::find($data['student_id']);
+            if (!$student) return $this->error('Estudante não encontrado.', Response::HTTP_NOT_FOUND);
+            if ($student->user_id !== $user_id) return $this->error('O estudante não foi cadastrado por você.', Response::HTTP_NOT_FOUND);
+
+            $exercise = Exercise::find($data['exercise_id']);
+            if (!$exercise) return $this->error('Exercicio não encontrado', Response::HTTP_NOT_FOUND);
+            if ($exercise->user_id !== $user_id) return $this->error('O Exercicio não foi cadastrado por você.', Response::HTTP_NOT_FOUND);
 
 
             $existExercise = Workout::where('day', $data['day'])
                 ->where('exercise_id', $data['exercise_id'])
                 ->where('student_id', $data['student_id'])
                 ->count();
-            if ($existExercise !== 0) return $this->error('voce ja incluiu esse exercicio para ' . $data['day'], Response::HTTP_CONFLICT);
+            if ($existExercise !== 0) return $this->error('Você já incluiu esse exercicio para ' . $data['day'], Response::HTTP_CONFLICT);
 
 
             $request->validate([
