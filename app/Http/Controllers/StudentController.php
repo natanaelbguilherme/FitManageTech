@@ -14,19 +14,48 @@ class StudentController extends Controller
 
     public function index(Request $request)
     {
-        $id = Auth::user()->id;
+
+        $user_id = Auth::user()->id;
 
         $search = $request->input('filter');
 
         $students = Student::query()
-            ->where('user_id', $id)
-            ->where('name', 'ilike', "%$search%")
-            ->orWhere('cpf', 'ilike', "%$search%")
-            ->orWhere('email', 'ilike', "%$search%")
-            ->orderBy('name', 'asc')
-            ->get();
+        ->where('user_id', $user_id)
+        ->where('name', 'ilike', "%$search%")
+        ->orWhere('cpf', 'ilike', "%$search%")
+        ->orWhere('email', 'ilike', "%$search%")
+        ->orderBy('name', 'asc')
+        ->get();
 
         return $students;
+    }
+
+    public function listOneStudent(Request $request, $id) {
+           
+        $student = Student::query()
+        ->where('id', $id)
+        ->first();
+
+        $listOneStudent = [
+            "id" => $student->id,
+            "name" => $student->name,
+            "email" => $student->email,
+            "date_birth" => $student->date_birth,
+            "cpf" => $student->cpf,
+            "contact" => $student->contact,
+            "address" => [
+                "cep" => $student->cep ? $student->cep : "",
+                "street" => $student->street ? $student->street : "",
+                "state" => $student->state ? $student->state : "",
+                "neighborhood" => $student->neighborhood ? $student->neighborhood : "",
+                "city" => $student->city ? $student->city : "",
+                "number" => $student->number ? $student->number : ""
+            ]
+
+        ];
+
+        return $listOneStudent;
+        
     }
 
 

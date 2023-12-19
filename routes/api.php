@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('students', [StudentController::class, 'store'])->middleware(ValidateLimitToUser::class);
     Route::get('students', [StudentController::class, 'index']);
+    Route::get('students/{id}', [StudentController::class, 'listOneStudent']);
     Route::delete('students/{id}', [StudentController::class, 'destroy']);
     Route::put('students/{id}', [StudentController::class, 'update']);
 
