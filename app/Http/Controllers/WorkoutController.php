@@ -69,7 +69,8 @@ class WorkoutController extends Controller
             ->get();
 
         $listStudentWorkout = [
-            "estudante" => $student,
+            "student_id" => $student->student_id,
+            "student_name" => $student->student_name,
             "workouts" => [
                 "SEGUNDA" => $segunda,
                 "TERÇA" => $terca,
@@ -86,7 +87,6 @@ class WorkoutController extends Controller
     }
 
     public function store(Request $request)
-
     {
 
         try {
@@ -130,3 +130,25 @@ class WorkoutController extends Controller
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
