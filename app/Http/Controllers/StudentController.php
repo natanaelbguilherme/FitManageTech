@@ -51,7 +51,7 @@ class StudentController extends Controller
                 'netghborhood' => 'string',
                 'city' => 'string',
                 'number' => 'string',
-                'contact' => 'string|required|max:5'
+                'contact' => 'string|required|max:20'
             ]);
 
             $user_id = $request->user()->id;

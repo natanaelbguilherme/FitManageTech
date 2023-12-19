@@ -10,8 +10,83 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class WorkoutController extends Controller
+
 {
+
+    public function index(Request $request, $id)
+    {
+        $user_id = $request->user()->id;
+        $student_id = Student::find($id);
+
+        if (!$student_id) return $this->error('Dado não encontrado', Response::HTTP_NOT_FOUND);
+        if ($student_id->user_id !== $user_id) return $this->error('voce nao tem acesso a este dado', Response::HTTP_FORBIDDEN);
+
+        $student = Student::query()
+            ->select('id as student_id', 'name as student_name')
+            ->where('id', $id)
+            ->first();
+
+        $segunda = Workout::query()
+            ->select('exercise_id', 'repetitions', 'weight', 'observations', 'time')
+            ->where('student_id', $id)
+            ->where('day', 'SEGUNDA')
+            ->get();
+
+        $terca = Workout::query()
+            ->select('exercise_id', 'repetitions', 'weight', 'observations', 'time')
+            ->where('student_id', $id)
+            ->where('day', 'TERÇA')
+            ->get();
+
+        $quarta = Workout::query()
+            ->select('exercise_id', 'repetitions', 'weight', 'observations', 'time')
+            ->where('student_id', $id)
+            ->where('day', 'QUARTA')
+            ->get();
+
+        $quinta = Workout::query()
+            ->select('exercise_id', 'repetitions', 'weight', 'observations', 'time')
+            ->where('student_id', $id)
+            ->where('day', 'QUINTA')
+            ->get();
+
+        $sexta = Workout::query()
+            ->select('exercise_id', 'repetitions', 'weight', 'observations', 'time')
+            ->where('student_id', $id)
+            ->where('day', 'SEXTA')
+            ->get();
+
+        $sabado = Workout::query()
+            ->select('exercise_id', 'repetitions', 'weight', 'observations', 'time')
+            ->where('student_id', $id)
+            ->where('day', 'SÁBADO')
+            ->get();
+
+        $domingo = Workout::query()
+            ->select('exercise_id', 'repetitions', 'weight', 'observations', 'time')
+            ->where('student_id', $id)
+            ->where('day', 'DOMINGO')
+            ->get();
+
+        $listStudentWorkout = [
+            "estudante" => $student,
+            "workouts" => [
+                "SEGUNDA" => $segunda,
+                "TERÇA" => $terca,
+                "QUARTA" => $quarta,
+                "QUINTA" => $quinta,
+                "SEXTA" => $sexta,
+                "SÁBADO" => $sabado,
+                "DOMINGO" => $domingo
+            ]
+
+        ];
+
+        return $listStudentWorkout;
+    }
+
     public function store(Request $request)
+
     {
 
         try {
