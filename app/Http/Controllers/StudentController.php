@@ -20,21 +20,27 @@ class StudentController extends Controller
         $search = $request->input('filter');
 
         $students = Student::query()
-        ->where('user_id', $user_id)
-        ->where('name', 'ilike', "%$search%")
-        ->orWhere('cpf', 'ilike', "%$search%")
-        ->orWhere('email', 'ilike', "%$search%")
-        ->orderBy('name', 'asc')
-        ->get();
+            ->where('user_id', $user_id)
+            ->where('name', 'ilike', "%$search%")
+            ->orWhere('cpf', 'ilike', "%$search%")
+            ->orWhere('email', 'ilike', "%$search%")
+            ->orderBy('name', 'asc')
+            ->get();
 
         return $students;
     }
 
-    public function listOneStudent(Request $request, $id) {
-           
+    public function listOneStudent($id)
+    {
+        $user_id = Auth::user()->id;
+        $student_id = Student::find($id);
+
+        if (!$student_id) return $this->error('Dado não encontrado', Response::HTTP_NOT_FOUND);
+        if ($student_id->user_id !== $user_id) return $this->error('voce nao tem acesso a este dado', Response::HTTP_FORBIDDEN);
+
         $student = Student::query()
-        ->where('id', $id)
-        ->first();
+            ->where('id', $id)
+            ->first();
 
         $listOneStudent = [
             "id" => $student->id,
@@ -55,7 +61,6 @@ class StudentController extends Controller
         ];
 
         return $listOneStudent;
-        
     }
 
 
