@@ -21,12 +21,12 @@ return new class extends Migration
             $table->date('date_birth');
             $table->string('cpf', 20)->unique();
             $table->string('contact', 20);
-            $table->string('city', 50);
-            $table->string('neighborhood', 50);
-            $table->string('number', 30);
-            $table->string('street', 30);
-            $table->string('state', 2);
-            $table->string('cep', 20);
+            $table->string('city', 50)->nullable();
+            $table->string('neighborhood', 50)->nullable();
+            $table->string('number', 30)->nullable();
+            $table->string('street', 30)->nullable();
+            $table->string('state', 2)->nullable();
+            $table->string('cep', 20)->nullable();
 
             $table->timestamps();
 
