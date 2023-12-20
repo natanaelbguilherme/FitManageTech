@@ -24,8 +24,8 @@ return new class extends Migration
             $table->decimal('weight', 5, 2);
             $table->integer('break_time');
             $table->enum('day', ['SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO', 'DOMINGO']);
+            $table->integer('time');
             $table->text('observations')->nullable();
-            $table->string('time', 10);
 
             $table->timestamps();
         });

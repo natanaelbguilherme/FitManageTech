@@ -12,6 +12,17 @@ use Symfony\Component\HttpFoundation\Response;
 class WorkoutController extends Controller
 
 {
+    function query($day, $id)
+    {
+        return Workout::query()
+            ->select('exercise_id', 'repetitions', 'weight', 'break_time', 'observations', 'time')
+            ->where('student_id', $id)
+            ->where('day', $day)
+            ->with(['exercise' => function ($query) {
+                $query->select('id', 'description');
+            }])
+            ->get();
+    }
 
     public function index(Request $request, $id)
     {
@@ -26,47 +37,14 @@ class WorkoutController extends Controller
             ->where('id', $id)
             ->first();
 
-        $segunda = Workout::query()
-            ->select('exercise_id', 'repetitions', 'weight', 'observations', 'time')
-            ->where('student_id', $id)
-            ->where('day', 'SEGUNDA')
-            ->get();
+        $segunda = $this->query('SEGUNDA', $id);
+        $terca = $this->query('TERÇA', $id);
+        $quarta = $this->query('QUARTA', $id);
+        $quinta = $this->query('QUINTA', $id);
+        $sexta = $this->query('SEXTA', $id);
+        $sabado = $this->query('SÁBADO', $id);
+        $domingo = $this->query('DOMINGO', $id);
 
-        $terca = Workout::query()
-            ->select('exercise_id', 'repetitions', 'weight', 'observations', 'time')
-            ->where('student_id', $id)
-            ->where('day', 'TERÇA')
-            ->get();
-
-        $quarta = Workout::query()
-            ->select('exercise_id', 'repetitions', 'weight', 'observations', 'time')
-            ->where('student_id', $id)
-            ->where('day', 'QUARTA')
-            ->get();
-
-        $quinta = Workout::query()
-            ->select('exercise_id', 'repetitions', 'weight', 'observations', 'time')
-            ->where('student_id', $id)
-            ->where('day', 'QUINTA')
-            ->get();
-
-        $sexta = Workout::query()
-            ->select('exercise_id', 'repetitions', 'weight', 'observations', 'time')
-            ->where('student_id', $id)
-            ->where('day', 'SEXTA')
-            ->get();
-
-        $sabado = Workout::query()
-            ->select('exercise_id', 'repetitions', 'weight', 'observations', 'time')
-            ->where('student_id', $id)
-            ->where('day', 'SÁBADO')
-            ->get();
-
-        $domingo = Workout::query()
-            ->select('exercise_id', 'repetitions', 'weight', 'observations', 'time')
-            ->where('student_id', $id)
-            ->where('day', 'DOMINGO')
-            ->get();
 
         $listStudentWorkout = [
             "student_id" => $student->student_id,
@@ -119,7 +97,7 @@ class WorkoutController extends Controller
                 'break_time' => 'required|int',
                 'day' => 'required|in:SEGUNDA,TERÇA,QUARTA,QUINTA,SEXTA,SÁBADO,DOMINGO',
                 'observations' => 'string',
-                'time' => 'string|required|max:10'
+                'time' => 'integer|required|max:10'
             ]);
 
             $workout = Workout::create($data);
@@ -130,25 +108,3 @@ class WorkoutController extends Controller
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
