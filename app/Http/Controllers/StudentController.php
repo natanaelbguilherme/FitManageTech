@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\Workout;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -68,7 +69,6 @@ class StudentController extends Controller
     {
 
         try {
-
             $data = $request->all();
 
             $existStudent = Student::where('email', $data['email'])->orwhere('cpf', $data['cpf'])->count();
