@@ -18,7 +18,7 @@
         </tr> --}}
         <tr>
             <td style="padding-top: 20px;">
-                <h2>Bem-vindo ao Nosso Serviço!</h2>
+                <h2>Bem-vindo ao Total Power!</h2>
                 <p>Olá {{ $name }},</p>
                 <p>Seja bem-vindo à nossa comunidade! Estamos muito felizes em tê-lo como parte da nossa família.
                     Obrigado por escolher o nosso plano de assinatura {{ $description }}.</p>

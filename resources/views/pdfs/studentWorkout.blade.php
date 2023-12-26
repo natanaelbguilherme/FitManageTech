@@ -31,12 +31,12 @@
             text-align: center;
         }
     </style>
-    <title>Ficha de Treino</title>
+    <title>Academia Total Power</title>
 </head>
 
 <body>
 
-    <h1>Ficha de Treino do {{ ucwords($name) }}</h1>
+    <h1>Ficha de Treino: {{ ucwords($name) }}</h1>
 
 
     @if (count($segunda) == 0 &&
