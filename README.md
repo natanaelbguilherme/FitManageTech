@@ -1,6 +1,6 @@
 # API TotalPower
 
-O Projeto Total Power consiste em uma API para gestão de treinos, que permite o cadastro e gestão de usuários, alunos e exercícios, além do cadastro e listagem de seus respectivos treinos.
+O Projeto Total Power consiste em uma API para gestão de treinos, que permite o cadastro e gestão de usuários, alunos e exercícios, além do cadastro e listagem de seus respectivos treinos. O Total Power tem três opções de planos, BRONZE, PRATA, e OURO, cada plano dá ao usuario o número de estudantes que o mesmo pode cadastrar.
 
 ## 🔧 Tecnologias utilizadas
 
@@ -60,7 +60,7 @@ composer install
 php artisan migrate
 ```
 
--Criação das seeds:
+-Criação das seeds (planos pré cadastrados, BRONZE, PRATA, e OUTRO):
 
 ```sh
 php artisan db:seed PopulatePlans
@@ -74,231 +74,215 @@ composer require barryvdh/laravel-dompdf
 
 ## 🚑📗 Documentação da API
 
-### 🚥 Endpoints - Rotas Pacientes
+##
 
-#### S01 - Cadastro de Paciente
+### 🚥 Endpoints - Rotas
+
+##
+
+#### Rota PÚBLICA para cadastro de usuário
 
 ```http
-  POST /api/pacientes
+  POST /api/users
 ```
 
 | Parâmetro            | Tipo     | Descrição                                                                    |
 | :------------------- | :------- | :--------------------------------------------------------------------------- |
 | `id`                 | `int`    | **Autoincremental**. Chave primaria                                          |
-| `nome_completo`      | `string` | **Obrigatório**. Nome do paciente                                            |
-| `genero`             | `string` | Genero do paciente                                                           |
-| `data_nascimento`    | `date`   | **Obrigatório** Data de nascimento do paciente                               |
-| `cpf`                | `string` | **Obrigatório**. CPF do paciente, único e válido                             |
-| `telefone`           | `string` | Telefone do paciente                                                         |
-| `contato_emergencia` | `string` | **Obrigatório**. Nome do contato de emergência                               |
-| `lista_alergias`     | `string` | Alergias do paciente                                                         |
-| `lista_cuidados`     | `string` | Cuidados especiais do paciente                                               |
-| `convenio`           | `string` | Convênio do paciente                                                         |
-| `status_atendimento` | `string` | Valores: 'AGUARDANDO_ATENDIMENTO','EM_ATENDIMENTO','ATENDIDO','NAO_ATENDIDO' |
+| `name`      | `string` | **Obrigatório**. Nome do usuário                                          |
+| `email`             | `string` | **Obrigatório**. Email do usuário, único e válido          |
+| `data_birth`    | `date`   | **Obrigatório** Data de nascimento do usuário                               |
+| `cpf`                | `string` | **Obrigatório**. CPF do usuário, único e válido                             |
+| `password`           | `string` | **Obrigatório** Senha de 8 a 32 caracteres               |
+| `plan_id` | `unsignedBigInteger` | **Obrigatório**. Id do plano selecionado                               |
 
-Request JSON exemplo
+Response JSON (exemplo)
 
 ```http
-  {
-    "nome_completo":"Paulo Nassi",
-    "genero":"MASCULINO",
-    "data_nascimento":"1984-03-01",
-    "cpf":"47360294045",
-	"telefone":"21 984569813",
-    "contato_emergencia":"Marina Nassi",
-	"lista_alergias":"Dipirona",
-	"lista_cuidados":"nenhum",
-	"convenio":"Amil",
-	"status_atendimento":"AGUARDANDO_ATENDIMENTO"
+{
+  "name": "João Pedro",
+  "email": "joaopedro@gmail.com",
+  "date_birth": "1990-08-25",
+  "cpf": "00000000005",
+  "plan_id": "3",
+  "updated_at": "2023-12-26T16:54:02.000000Z",
+  "created_at": "2023-12-26T16:54:02.000000Z",
+  "id": 7
 }
 ```
 
 | Response Status | Descrição         |
 | :-------------- | :---------------- |
-| `201`           | sucesso           |
-| `400`           | dados inválidos   |
-| `409`           | CPF já cadastrado |
-| `500`           | erro interno      |
+| `201`           | sucesso (CREATED)  |
+| `400`           | dados inválidos na requisição (BAD REQUEST)   |
+| `409`           | CPF já cadastrado (CONFLICT)|
 
+
+-Em caso de sucesso o usuário receberá um email de boas vindas.
 ##
 
-#### S02 - Atualização dos dados de Pacientes
+#### Rota PÚBLICA para Login
 
 ```http
-  PUT /api/pacientes/:id
+  POST /api/login
 ```
 
 | Parâmetro            | Tipo     | Descrição                       |
 | :------------------- | :------- | :------------------------------ |
-| `nome_completo`      | `string` | Nome do paciente                |
-| `genero`             | `string` | Genero do paciente              |
-| `data_nascimento`    | `date`   | Data de nascimento do paciente  |
-| `cpf`                | `string` | CPF do paciente, único e válido |
-| `telefone`           | `string` | Telefone do paciente            |
-| `contato_emergencia` | `string` | Nome do contato de emergência   |
-| `lista_alergias`     | `string` | Alergias do paciente            |
-| `lista_cuidados`     | `string` | Cuidados especiais do paciente  |
-| `convenio`           | `string` | Convênio do paciente            |
+| `email`      | `string` | **Obrigatório**. Email do usuário |
+| `password`    | `string` | **Obrigatório**. Senha do usuário              |
 
-Request JSON exemplo
+Response JSON (exemplo)
 
 ```http
-/api/pacientes/1
-```
-
-```http
-  {
-	"telefone":"'1 9245698115",
-	"convenio":"Unimed"
+{
+  "message": "Autorizado",
+  "status": 200,
+  "data": {
+    "name": "nome do usuário",
+    "token": "01|FBrdcVPE2BX0FoCxk3V91XMUdpXELR5pO4Nca8ssf1b4c85a"
+  }
 }
 ```
+-Token de acesso válido por 24 hroas.
 
-| Response Status | Descrição                                      |
-| :-------------- | :--------------------------------------------- |
-| `200`           | sucesso                                        |
-| `400`           | dados inválidos                                |
-| `404`           | não encontrado registro com o código informado |
-| `500`           | erro interno                                   |
+| Response Status | Descrição         |
+| :-------------- | :---------------- |
+| `200`           | sucesso (ok)  |
+| `400`           | dados inválidos na requisição (BAD REQUEST)   |
+| `401`           | Login invalido (UNAUTHORIZED)|
+
 
 ##
 
-#### S03 - Atualização do status de atendimento
+#### Rota PRIVADA para logout
 
 ```http
-  PUT /api/pacientes/:id/status
+  POST /api/logout
+```
+
+-Passar token na requisição.
+
+| Response Status | Descrição         |
+| :-------------- | :---------------- |
+| `204`           |  (Not Content)  |
+
+##
+
+#### Rota PRIVADA para dashboard
+
+```http
+  GET /api/dashboard
+```
+
+Response JSON (exemplo)
+
+```http
+{
+  "registered_students": 3,
+  "registered_exercices": 3,
+  "current_user_plan": "Plano BRONZE",
+  "remaining_students": 7
+}
+```
+-Retorna quantidade de estudantes, exercícios, e plano escolhido do usuário logado, e também estudantes o usuário ainda pode cadastrar.
+| Response Status | Descrição         |
+| :-------------- | :---------------- |
+| `200`           | sucesso (ok)  |
+
+##
+
+#### Rota PÚBLICA para cadastro de exercícios
+
+```http
+  POST /api/exercises
 ```
 
 | Parâmetro            | Tipo     | Descrição                                                                    |
 | :------------------- | :------- | :--------------------------------------------------------------------------- |
-| `id`                 | `int`    | **Obrigatório** número inteiro chave primaria                                |
-| `status_atendimento` | `string` | Valores: 'AGUARDANDO_ATENDIMENTO','EM_ATENDIMENTO','ATENDIDO','NAO_ATENDIDO' |
+| `id`                 | `int`    | **Autoincremental**. Chave primaria                                          |
+| `description`      | `string` | **Obrigatório**. Nome do exercício                                          |
+| `user_id`      | `unsignedBigInteger` |  id do usuario que cadastrou o exercício                                         |
 
-Request JSON exemplo
+Response JSON (exemplo)
 
 ```http
-/api/pacientes/1/status
+ {
+  "user_id": 4,
+  "description": "agachamento",
+  "updated_at": "2023-12-26T17:28:14.000000Z",
+  "created_at": "2023-12-26T17:28:14.000000Z",
+  "id": 4
+}
+
 ```
 
+| Response Status | Descrição         |
+| :-------------- | :---------------- |
+| `201`           | sucesso (CREATED)  |
+| `400`           | dados inválidos na requisição (BAD REQUEST)   |
+| `409`           | Exercício já cadastrado (CONFLICT)|
+
+
+##
+
+#### Rota PRIVADA para listagem de exercicios
+
 ```http
+  GET /api/exercises
+```
+
+Response JSON (exemplo)
+
+```http
+  [
   {
-	"status_atendimento":"EM_ATENDIMENTO"
+    "id": 1,
+    "description": "remada"
+  },
+  {
+    "id": 2,
+    "description": "leg"
+  },
+  {
+    "id": 3,
+    "description": "supino"
+  },
+  {
+    "id": 4,
+    "description": "agachamento"
   }
+]
 ```
 
-| Response Status | Descrição                                      |
-| :-------------- | :--------------------------------------------- |
-| `200`           | sucesso                                        |
-| `400`           | dados inválidos                                |
-| `404`           | não encontrado registro com o código informado |
-| `500`           | erro interno                                   |
+| Response Status | Descrição         |
+| :-------------- | :---------------- |
+| `200`           | sucesso (ok)  |
 
 ##
 
-#### S04 - Listagem de Pacientes
+#### Rota PRIVADA para deletar um exercicio
 
 ```http
-  GET /api/pacientes
+  DELETE /api/exercises/:id
 ```
-
-Não é necessario resquest body
-
-Opcionalmente pode ser utilizado no patch um query param informando: AGUARDANDO_ATENDIMENTO, EM_ATENDIMENTO, ATENDIDO e NAO_ATENDIDO
-
-Exemplo:
-`/api/pacientes?status=ATENDIDO`
-| Parâmetro | Tipo | Descrição |
-| :---------- | :--------- | :---------------------------------- |
-| `status_atendimento` | `string` | Valores: 'AGUARDANDO_ATENDIMENTO','EM_ATENDIMENTO','ATENDIDO','NAO_ATENDIDO'|
-
-Exemplo de resposta:
-
-```http
-{
-	"id": 1,
-	"nome_completo":"Paulo Nassi",
-    "genero":"MASCULINO",
-    "data_nascimento":"1984-03-01",
-    "cpf":"47360294045",
-	"telefone":"21 984569813",
-    "contato_emergencia":"Marina Nassi",
-	"lista_alergias":"Dipirona",
-	"lista_cuidados":"nenhum",
-	"convenio":"Amil",
-	"status_atendimento": "ATENDIDO",
-	"total_atendimentos": 1,
-	"createdAt": "2023-04-19T10:32:32.796Z",
-	"updatedAt": "2023-04-20T21:14:53.099Z"
-}
-```
-
-| Response Status | Descrição |
-| :-------------- | :-------- |
-| `200`           | sucesso   |
-
-##
-
-#### S05 - Listagem de Paciente pelo identificador
-
-```http
-  GET /api/pacientes/:id
-```
-
-Não é necessario resquest body
+Não é necessario body
 
 Request exemplo:
-`/api/pacientes/1`
-| Parâmetro | Tipo | Descrição |
-| :---------- | :--------- | :---------------------------------- |
-| `id` | `int` | **Obrigatório** número inteiro chave primaria|
-
-Exemplo de resposta:
-
-```http
-{
-	"id": 1,
-	"nome_completo":"Paulo Nassi",
-    "genero":"MASCULINO",
-    "data_nascimento":"1984-03-01",
-    "cpf":"47360294045",
-	"telefone":"21 984569813",
-    "contato_emergencia":"Marina Nassi",
-	"lista_alergias":"Dipirona",
-	"lista_cuidados":"nenhum",
-	"convenio":"Amil",
-	"status_atendimento": "ATENDIDO",
-	"total_atendimentos": 1,
-	"createdAt": "2023-04-19T10:32:32.796Z",
-	"updatedAt": "2023-04-20T21:14:53.099Z"
-}
-```
-
-| Response Status | Descrição                                      |
-| :-------------- | :--------------------------------------------- |
-| `200`           | sucesso                                        |
-| `404`           | não encontrado registro com o código informado |
-
-##
-
-#### S06 - Exclusão de Paciente
-
-```http
-  DELETE /api/pacientes/:id
-```
-
-Não é necessario resquest body
-
-Request exemplo:
-`/api/pacientes/1`
+`/api/exercises/1`
 | Parâmetro | Tipo | Descrição |
 | :---------- | :--------- | :---------------------------------- |
 | `id` | `int` | **Obrigatório** número inteiro chave primaria|
 
 Não há response no body em caso de sucesso
 
-| Response Status | Descrição                                      |
-| :-------------- | :--------------------------------------------- |
-| `204`           | sucesso                                        |
-| `404`           | não encontrado registro com o código informado |
+
+| Response Status | Descrição         |
+| :-------------- | :---------------- |
+| `204`           |  (Not Content)  |
+| `409`           | Exercício sendo usado em um treino (CONFLICT)|
+| `403`           | Exercício não foi dacastrado pelo usuário autenticado (CONFLICT)|
+| `404`           | Exercício não encontrado (NOT FOUND)|
 
 ---
 
