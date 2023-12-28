@@ -266,7 +266,6 @@ Response JSON (exemplo)
 ```http
   DELETE /api/exercises/:id
 ```
-Não é necessario body
 
 Request exemplo:
 `/api/exercises/1`
@@ -276,509 +275,569 @@ Request exemplo:
 
 Não há response no body em caso de sucesso
 
-
 | Response Status | Descrição         |
 | :-------------- | :---------------- |
 | `204`           |  (Not Content)  |
 | `409`           | Exercício sendo usado em um treino (CONFLICT)|
-| `403`           | Exercício não foi dacastrado pelo usuário autenticado (CONFLICT)|
+| `403`           | Exercício não foi dacastrado pelo usuário autenticado (FORBIDDEN)|
 | `404`           | Exercício não encontrado (NOT FOUND)|
 
----
+##
 
-### 🚥 Endpoints - Rotas Medicos
-
-#### S07 - Cadastro de Medico
+#### Rota PRIVADA para cadastro de estudantes
 
 ```http
-  POST /api/medicos
+  POST /api/students
 ```
 
-| Parâmetro                     | Tipo     | Descrição                                                                                                                     |
-| :---------------------------- | :------- | :---------------------------------------------------------------------------------------------------------------------------- |
-| `id`                          | `int`    | **Autoincremental**. Chave primaria                                                                                           |
-| `nome_completo`               | `string` | **Obrigatório**. Nome do medico                                                                                               |
-| `genero`                      | `string` | Genero do medico                                                                                                              |
-| `data_nascimento`             | `date`   | **Obrigatório** Data de nascimento do medico                                                                                  |
-| `cpf`                         | `string` | **Obrigatório**. CPF do medico, único e válido                                                                                |
-| `telefone`                    | `string` | Telefone do medico                                                                                                            |
-| `instituicao_ensino_formacao` | `string` | **Obrigatório**. Instituição de formação                                                                                      |
-| `crm_uf`                      | `string` | **Obrigatório** Cadastro do CRM/UF                                                                                            |
-| `especializacao_clinica`      | `string` | **Obrigatório** Valores: CLINICO_GERAL, ANESTESISTA, DERMATOLOGIA, GINECOLOGIA, NEUROLOGIA, PEDIATRIA, PSIQUIATRIA, ORTOPEDIA |
-| `estado_no_sistema`           | `string` | Valores: 'ATIVO','INATIVO' , valor padrão 'ATIVO'                                                                             |
+| Parâmetro            | Tipo     | Descrição                                                                    |
+| :------------------- | :------- | :--------------------------------------------------------------------------- |
+| `id`                 | `int`    | **Autoincremental**. Chave primaria                                          |
+| `name`      | `string` | **Obrigatório**. Nome do usuário                                          |
+| `email`             | `string` | **Obrigatório**. Email do usuário, único e válido          |
+| `data_birth`    | `date`   | **Obrigatório** Data de nascimento do usuário                               |
+| `cpf`                | `string` | **Obrigatório**. CPF do usuário, único e válido                             |
+| `contact`                | `string` | **Obrigatório**. Contato do usuário, com no máximo 20 caracteres  |
+| `user_id` | `unsignedBigInteger` | **Obrigatório**. Id do usuario que cadastrou o estudante |
+| `city`                | `string` | Cidade  |
+| `neighborhood`      | `string` | Bairro  |
+| `number`                | `string` |Número da residencia |
+| `street`                | `string` | Nome da rua  |
+| `state`                | `string` | estado, com no máximo 2 caracteres |
+| `cep`                | `string` | Cep, com no máximo 20 caracteres  |
 
-Request JSON exemplo
+Response JSON (exemplo)
 
 ```http
-  {
-    "nome_completo":"Roberto Farias",
-    "genero":"MASCULINO",
-    "data_nascimento":"1982-03-01",
-    "cpf":"22023336066",
-	"telefone":"21 984569813",
-	"instituicao_ensino_formacao":"FAEC Med",
-	"crm_uf":"76870690",
-	"especializacao_clinica":"ORTOPEDIA",
-	"estado_no_sistema": "ATIVO"
+{
+  "name": "joao",
+  "email": "joao@gmail.com",
+  "date_birth": "1990-08-25",
+  "cpf": "12234413325",
+  "contact": "00000000001",
+  "cep": "12345-678",
+  "street": "rua a",
+  "state": "CE",
+  "neighborhood": "centro",
+  "city": "pacajus",
+  "number": "001",
+  "id": 5
 }
 ```
 
 | Response Status | Descrição         |
 | :-------------- | :---------------- |
-| `201`           | sucesso           |
-| `400`           | dados inválidos   |
-| `409`           | CPF já cadastrado |
-| `500`           | erro interno      |
+| `201`           | sucesso (CREATED)  |
+| `400`           | dados inválidos na requisição (BAD REQUEST)   |
+| `403`           | Limite de cadastros excedidos (FORBIDDEN)|
+| `409`           | CPF ou email já cadastrados (CONFLICT)|
 
 ##
 
-#### S08 - Atualização dos dados de Medicos
 
+#### Rota PRIVADA para listagem de estudantes
+-Busca os estudantes de forma geral.
+-Também é possivel pesquisar por nome, cpf ou email, enviado QUERY PARAMS.
+    EX: enviar no parametro a palavra `filter` e no value a opção para pesquisar, por ex: `joao`
 ```http
-  PUT /api/medicos/:id
+  GET /api/students
 ```
 
-| Parâmetro                     | Tipo     | Descrição                                                                                                     |
-| :---------------------------- | :------- | :------------------------------------------------------------------------------------------------------------ |
-| `nome_completo`               | `string` | Nome do medico                                                                                                |
-| `genero`                      | `string` | Genero do medico                                                                                              |
-| `data_nascimento`             | `date`   | Data de nascimento do medico                                                                                  |
-| `cpf`                         | `string` | CPF do medico, único e válido                                                                                 |
-| `telefone`                    | `string` | Telefone do medico                                                                                            |
-| `instituicao_ensino_formacao` | `string` | Instituição de formação                                                                                       |
-| `crm_uf`                      | `string` | Cadastro do CRM/UF                                                                                            |
-| `especializacao_clinica`      | `string` | Valores: CLINICO_GERAL, ANESTESISTA, DERMATOLOGIA, GINECOLOGIA, NEUROLOGIA, PEDIATRIA, PSIQUIATRIA, ORTOPEDIA |
-
-Request JSON exemplo
+Response JSON (exemplo) - busca geral sem parametro de pesquisa
 
 ```http
-/api/medicos/1
-```
-
-```http
+ [
   {
-	"telefone":"11 9245698345"
-}
-```
-
-| Response Status | Descrição                                      |
-| :-------------- | :--------------------------------------------- |
-| `200`           | sucesso                                        |
-| `400`           | dados inválidos                                |
-| `404`           | não encontrado registro com o código informado |
-| `500`           | erro interno                                   |
-
-##
-
-#### S09 - Atualização do estado no sistema
-
-```http
-  PUT /api/medicos/:id/status
-```
-
-| Parâmetro           | Tipo     | Descrição                                     |
-| :------------------ | :------- | :-------------------------------------------- |
-| `id`                | `int`    | **Obrigatório** número inteiro chave primaria |
-| `estado_no_sistema` | `string` | Valores: 'ATIVO','INATIVO'                    |
-
-Request JSON exemplo
-
-```http
-/api/medicos/1/status
-```
-
-```http
+    "id": 3,
+    "name": "joao",
+    "email": "joao@gmail.com",
+    "date_birth": "1990-08-25",
+    "cpf": "12234413321",
+    "contact": "00000000001",
+    "city": "pacajus",
+    "neighborhood": "centro",
+    "number": "001",
+    "street": "rua a",
+    "state": "CE",
+    "cep": "12345-678"
+  },
   {
-	"status_atendimento":"INATIVO"
+    "id": 1,
+    "name": "pedro",
+    "email": "pedro@gmail.com",
+    "date_birth": "1990-08-25",
+    "cpf": "12339413321",
+    "contact": "00000000000",
+    "city": "pacajus",
+    "neighborhood": "centro",
+    "number": "001",
+    "street": "rua a",
+    "state": "CE",
+    "cep": "12345-678"
+  },
+  {
+    "id": 2,
+    "name": "tiago",
+    "email": "tiago@gmail.com",
+    "date_birth": "1990-08-25",
+    "cpf": "12334413321",
+    "contact": "00000000001",
+    "city": "pacajus",
+    "neighborhood": "centro",
+    "number": "001",
+    "street": "rua a",
+    "state": "CE",
+    "cep": "12345-678"
   }
-```
-
-| Response Status | Descrição                                      |
-| :-------------- | :--------------------------------------------- |
-| `200`           | sucesso                                        |
-| `400`           | dados inválidos                                |
-| `404`           | não encontrado registro com o código informado |
-| `500`           | erro interno                                   |
-
-##
-
-#### S10 - Listagem de Medicos
-
-```http
-  GET /api/medicos
-```
-
-Não é necessario resquest body
-
-Opcionalmente pode ser utilizado no patch um query param informando: ATIVO, INATIVO
-
-Exemplo:
-`/api/medicos?status=INATIVO`
-| Parâmetro | Tipo | Descrição |
-| :---------- | :--------- | :---------------------------------- |
-| `status_atendimento` | `string` | Valores: 'ATIVO', 'INATIVO'|
-
-Exemplo de resposta:
-
-```http
-{
-	"id": 1,
-    "nome_completo":"Roberto Farias",
-    "genero":"MASCULINO",
-    "data_nascimento":"1982-03-01",
-    "cpf":"22023336066",
-	"telefone":"21 984569813",
-	"instituicao_ensino_formacao":"FAEC Med",
-	"crm_uf":"76870690",
-	"especializacao_clinica":"ORTOPEDIA",
-	"estado_no_sistema": "INATIVO"
-	"total_atendimentos": 1,
-	"createdAt": "2023-04-19T12:00:46.855Z",
-	"updatedAt": "2023-04-21T00:02:47.509Z"
-}
-```
-
-| Response Status | Descrição |
-| :-------------- | :-------- |
-| `200`           | sucesso   |
-
-##
-
-#### S11 - Listagem de Medico pelo identificador
-
-```http
-  GET /api/medicos/:id
-```
-
-Não é necessario resquest body
-
-Request exemplo:
-`/api/medicos/1`
-| Parâmetro | Tipo | Descrição |
-| :---------- | :--------- | :---------------------------------- |
-| `id` | `int` | **Obrigatório** número inteiro chave primaria|
-
-Exemplo de resposta:
-
-```http
-{
-	"id": 1,
-    "nome_completo":"Roberto Farias",
-    "genero":"MASCULINO",
-    "data_nascimento":"1982-03-01",
-    "cpf":"22023336066",
-	"telefone":"21 984569813",
-	"instituicao_ensino_formacao":"FAEC Med",
-	"crm_uf":"76870690",
-	"especializacao_clinica":"ORTOPEDIA",
-	"estado_no_sistema": "ATIVO"
-	"total_atendimentos": 1,
-	"createdAt": "2023-04-19T12:00:46.855Z",
-	"updatedAt": "2023-04-21T00:02:47.509Z"
-}
-```
-
-| Response Status | Descrição                                      |
-| :-------------- | :--------------------------------------------- |
-| `200`           | sucesso                                        |
-| `404`           | não encontrado registro com o código informado |
-
-##
-
-#### S12 - Exclusão de Medico
-
-```http
-  DELETE /api/medicos/:id
-```
-
-Não é necessario resquest body
-
-Request exemplo:
-`/api/medicos/1`
-| Parâmetro | Tipo | Descrição |
-| :---------- | :--------- | :---------------------------------- |
-| `id` | `int` | **Obrigatório** número inteiro chave primaria|
-
-Não há response no body em caso de sucesso
-
-| Response Status | Descrição                                      |
-| :-------------- | :--------------------------------------------- |
-| `204`           | sucesso                                        |
-| `404`           | não encontrado registro com o código informado |
-
----
-
-### 🚥 Endpoints - Rotas Enfermeiros
-
-#### S13 - Cadastro de Enfermeiro
-
-```http
-  POST /api/enfermeiros
-```
-
-| Parâmetro                     | Tipo     | Descrição                                          |
-| :---------------------------- | :------- | :------------------------------------------------- |
-| `id`                          | `int`    | **Autoincremental**. Chave primaria                |
-| `nome_completo`               | `string` | **Obrigatório**. Nome do enfermeiro                |
-| `genero`                      | `string` | Genero do enfermeiro                               |
-| `data_nascimento`             | `date`   | **Obrigatório** Data de nascimento do enfermeiro   |
-| `cpf`                         | `string` | **Obrigatório**. CPF do enfermeiro, único e válido |
-| `telefone`                    | `string` | Telefone do enfermeiro                             |
-| `instituicao_ensino_formacao` | `string` | **Obrigatório**. Instituição de formação           |
-| `cofen_uf`                    | `string` | **Obrigatório** Cadastro do COFEN/UF               |
-
-Request JSON exemplo
-
-```http
-  {
-    "nome_completo":"Ana Leme",
-    "genero":"FEMININO",
-    "data_nascimento":"1987-02-01",
-    "cpf":"99686191089",
-    "telefone":"21 984569813",
-    "instituicao_ensino_formacao":"Fac Enf MG",
-    "cofen_uf":"8619108"
-}
-```
-
-| Response Status | Descrição         |
-| :-------------- | :---------------- |
-| `201`           | sucesso           |
-| `400`           | dados inválidos   |
-| `409`           | CPF já cadastrado |
-| `500`           | erro interno      |
-
-##
-
-#### S14 - Atualização dos dados de Enfermeiros
-
-```http
-  PUT /api/enfermeiros/:id
-```
-
-| Parâmetro                     | Tipo     | Descrição                         |
-| :---------------------------- | :------- | :-------------------------------- |
-| `nome_completo`               | `string` | Nome do enfermeiro                |
-| `genero`                      | `string` | Genero do enfermeiro              |
-| `data_nascimento`             | `date`   | Data de nascimento do enfermeiro  |
-| `cpf`                         | `string` | CPF do enfermeiro, único e válido |
-| `telefone`                    | `string` | Telefone do enfermeiro            |
-| `instituicao_ensino_formacao` | `string` | Instituição de formação           |
-| `cofen_uf`                    | `string` | Cadastro do COFEN/UF              |
-
-Request JSON exemplo
-
-```http
-/api/enfermeiros/1
-```
-
-```http
-  {
-	"telefone":"11 845698345",
-	"instituicao_ensino_formacao": "Faculdade Pan",
-}
-```
-
-| Response Status | Descrição                                      |
-| :-------------- | :--------------------------------------------- |
-| `200`           | sucesso                                        |
-| `400`           | dados inválidos                                |
-| `404`           | não encontrado registro com o código informado |
-| `500`           | erro interno                                   |
-
-##
-
-#### S15 - Listagem de Enfermeiros
-
-```http
-  GET /api/enfermeiros
-```
-
-Não é necessario resquest body
-
-Exemplo de resposta:
-
-```http
-{
-	"id": 1,
-	"nome_completo":"Ana Leme",
-   	"genero":"FEMININO",
-   	"data_nascimento":"1987-02-01",
-   	"cpf":"99686191089",
-   	"telefone":"21 984569813",
-   	"instituicao_ensino_formacao":"Fac Enf MG",
-   	"cofen_uf":"8619108"
-	"updatedAt": "2023-04-20T00:57:43.465Z",
-	"createdAt": "2023-04-20T00:57:43.465Z"
-}
-```
-
-| Response Status | Descrição |
-| :-------------- | :-------- |
-| `200`           | sucesso   |
-
-##
-
-#### S16 - Listagem de Enfermeiro pelo identificador
-
-```http
-  GET /api/enfermeiros/:id
-```
-
-Não é necessario resquest body
-
-Request exemplo:
-`/api/enfermeiros/1`
-| Parâmetro | Tipo | Descrição |
-| :---------- | :--------- | :---------------------------------- |
-| `id` | `int` | **Obrigatório** número inteiro chave primaria|
-
-Exemplo de resposta:
-
-```http
-{
-	"id": 1,
-	"nome_completo":"Ana Leme",
-   	"genero":"FEMININO",
-   	"data_nascimento":"1987-02-01",
-   	"cpf":"99686191089",
-   	"telefone":"21 984569813",
-   	"instituicao_ensino_formacao":"Fac Enf MG",
-   	"cofen_uf":"8619108"
-	"updatedAt": "2023-04-20T00:57:43.465Z",
-	"createdAt": "2023-04-20T00:57:43.465Z"
-}
-```
-
-| Response Status | Descrição                                      |
-| :-------------- | :--------------------------------------------- |
-| `200`           | sucesso                                        |
-| `404`           | não encontrado registro com o código informado |
-
-##
-
-#### S17 - Exclusão de Enfermeiro
-
-```http
-  DELETE /api/enfermeiros/:id
-```
-
-Não é necessario resquest body
-
-Request exemplo:
-`/api/enfermeiros/1`
-| Parâmetro | Tipo | Descrição |
-| :---------- | :--------- | :---------------------------------- |
-| `id` | `int` | **Obrigatório** número inteiro chave primaria|
-
-Não há response no body em caso de sucesso
-
-| Response Status | Descrição                                      |
-| :-------------- | :--------------------------------------------- |
-| `204`           | sucesso                                        |
-| `404`           | não encontrado registro com o código informado |
-
----
-
-### 🚥 Endpoints - Atendimentos
-
-#### S18- Realização de Atendimento Médico
-
-```http
-  POST /api/atendimentos
-```
-
-| Parâmetro     | Tipo  | Descrição                                      |
-| :------------ | :---- | :--------------------------------------------- |
-| `id`          | `int` | **Autoincremental**. Chave primaria            |
-| `paciente_id` | `int  | **Obrigatório**. Chave estrangeira do paciente |
-| `medico_id`   | `int  | **Obrigatório**. Chave estrangeira do medico   |
-
-Request JSON exemplo
-
-```http
-  {
-    "paciente_id":"2",
-    "medico_id":"1"
-}
-```
-
-| Response Status | Descrição                                     |
-| :-------------- | :-------------------------------------------- |
-| `201`           | sucesso                                       |
-| `400`           | dados inválidos                               |
-| `404`           | medico ou paciente não encontrados no sistema |
-| `500`           | erro interno                                  |
-
-##
-
-#### S19 - Listagem de Atendimentos ⭐(funcionalidade extra)
-
-```http
-  GET /api/atendimentos
-```
-
-Não é necessario resquest body
-
-Opcionalmente podem ser utilizados no patch dois query params informando: medico_id ou paciente_id
-
-Exemplo query params médico:
-`/api/atendimentos?medico=1` retorna todos atendimentos do médico especificado
-
-Exemplo query params paciente:
-`/api/atendimentos?paciente=1` retorna todos atendimentos do paciente especificado
-
-| Parâmetro     | Tipo  | Descrição                                                        |
-| :------------ | :---- | :--------------------------------------------------------------- |
-| `id`          | `int` | Chave primaria                                                   |
-| `paciente_id` | `int` | **querie params não obrigatorio**. Chave estrangeira do paciente |
-| `medico_id`   | `int` | **querie params não obrigatorio**. Chave estrangeira do medico   |
-
-Exemplo de resposta:
-
-```http
-[
-	{
-		"id": 1,
-		"paciente_id": 13,
-		"medico_id": 1,
-		"createdAt": "2023-04-20T23:56:33.120Z",
-		"updatedAt": "2023-04-20T23:56:33.120Z",
-		"pacienteId": 13,
-		"medicoId": 1
-	},
-	{
-		"id": 2,
-		"paciente_id": 14,
-		"medico_id": 1,
-		"createdAt": "2023-04-20T23:57:25.088Z",
-		"updatedAt": "2023-04-20T23:57:25.088Z",
-		"pacienteId": 14,
-		"medicoId": 1
-	}
 ]
 ```
 
-| Response Status | Descrição                                     |
-| :-------------- | :-------------------------------------------- |
-| `200`           | sucesso                                       |
-| `404`           | medico ou paciente não encontrados no sistema |
-| `500`           | erro interno                                  |
+Response JSON (exemplo) - pesquisa com o value `joao`
 
-## Projeto Avaliativo do Módulo 1 :: LAB 365
+```http
+ [
+  {
+    "id": 3,
+    "name": "joao",
+    "email": "joao@gmail.com",
+    "date_birth": "1990-08-25",
+    "cpf": "12234413321",
+    "contact": "00000000001",
+    "city": "pacajus",
+    "neighborhood": "centro",
+    "number": "001",
+    "street": "rua a",
+    "state": "CE",
+    "cep": "12345-678"
+  }
+]
+```
 
-#### Curso WEB FullStack 2023
+| Response Status | Descrição         |
+| :-------------- | :---------------- |
+| `200`           | sucesso (ok)  |
 
-|                                                                                                                                                                                                      |                                                                                           |
-| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------- |
-| <img src="https://media.licdn.com/dms/image/C4D0BAQGcs8aDa4BZOQ/company-logo_200_200/0/1668186440015?e=1690416000&v=beta&t=YhQTfa9VLbEVw1XnROd2OsJUwGu-7Ia8eUoy18a3ve0" width="100%" height="100%"/> | [LAB365 ](https://lab365.tech/) - Espaço do SENAI para desenvolver habilidades do futuro. |
+##
+
+#### Rota PRIVADA para deletar um estudante - Soft Delete
+
+```http
+  DELETE /api/students/:id
+```
+
+Request exemplo:
+`/api/students/1`
+| Parâmetro | Tipo | Descrição |
+| :---------- | :--------- | :---------------------------------- |
+| `id` | `int` | **Obrigatório** número inteiro chave primaria|
+
+Não há response no body em caso de sucesso
+
+| Response Status | Descrição         |
+| :-------------- | :---------------- |
+| `204`           |  (Not Content)  |
+| `403`           | Estudante não foi dacastrado pelo usuário autenticado (FORBIDDEN)|
+| `404`           | Estudante não encontrado (NOT FOUND)|
+
+##
+
+#### Rota PRIVADA para atualização de estudantes
+
+```http
+  PUT /api/students/:id
+```
+
+| Parâmetro            | Tipo     | Descrição                                                                    |
+| :------------------- | :------- | :--------------------------------------------------------------------------- |
+| `name`      | `string` | **Opicional** Nome do usuário                                          |
+| `email`             | `string` | **Opicional** Email do usuário, único e válido          |
+| `data_birth`    | `date`   | **Opicional** Data de nascimento do usuário                               |
+| `cpf`                | `string` | **Opicional** CPF do usuário, único e válido                             |
+| `contact`                | `string` |**Opicional** Contato do usuário  |
+| `city`                | `string` |**Opicional** Cidade  |
+| `neighborhood`      | `string` |**Opicional** Bairro  |
+| `number`                | `string` |**Opicional** Número da residencia |
+| `street`                | `string` |**Opicional** Nome da rua  |
+| `state`                | `string` |**Opicional** estado |
+| `cep`                | `string` |**Opicional** Cep  |
+
+-Requisição para a rota
+```http
+  PUT /api/students/5
+```
+-Eviando no body
+```http
+{
+  "name": "joao guilherme",
+  "contact": "123457789"
+ }
+```
+
+Response JSON (exemplo)
+
+```http
+{
+  "id": 5,
+  "name": "joao guilherme",
+  "email": "joao3@gmail.com",
+  "date_birth": "1990-08-25",
+  "cpf": "12234413325",
+  "contact": "123457789",
+  "city": "pacajus",
+  "neighborhood": "centro",
+  "number": "001",
+  "street": "rua a",
+  "state": "CE",
+  "cep": "12345-678"
+}
+```
+
+| Response Status | Descrição         |
+| :-------------- | :---------------- |
+| `200`           | sucesso (ok)  |
+
+##
+
+#### Rota PRIVADA para cadastro/montagem de treinos
+```http
+  POST /api/workouts
+```
+
+| Parâmetro            | Tipo     | Descrição                                                                    |
+| :------------------- | :------- | :--------------------------------------------------------------------------- |
+| `id`                 | `int`    | **Autoincremental**. Chave primaria                     |
+| `student_id` | `unsignedBigInteger` | **Obrigatório**. Id do estudante assosicado |
+| `exercise_id` | `unsignedBigInteger` | **Obrigatório**. Id do exercício assossiado |
+| `repetitions`      | `int` | **Obrigatório**. Número de repetições do exercício  |
+| `weight`         | `decimal` | **Obrigatório**. Peso para realizar o exercício   |
+| `break_time`    | `int`   | **Obrigatório** Tempo de descanso entre os exercícios  |
+| `day`       | `enum` | **Obrigatório**. Contendo os valores: SEGUNDA,TERÇA, QUARTA, QUINTA, SEXTA, SÁBADO, DOMINGO. O dia do treino|
+| `observations` | `string` | Observações  |
+| `time` | `int` | **Obrigatório**. Tempo para realizar o exercício |
+
+
+Response JSON (exemplo)
+
+```http
+{
+  "student_id": 1,
+  "exercise_id": 4,
+  "repetitions": 15,
+  "weight": 10.5,
+  "break_time": 50,
+  "day": "QUINTA",
+  "time": 10,
+  "updated_at": "2023-12-28T13:58:17.000000Z",
+  "created_at": "2023-12-28T13:58:17.000000Z",
+  "id": 17
+}
+```
+
+| Response Status | Descrição         |
+| :-------------- | :---------------- |
+| `201`           | sucesso (CREATED)  |
+| `400`           | dados inválidos na requisição (BAD REQUEST)   |
+| `409`           | exerccio ja cadastrado neste dia (CONFLICT)|
+
+##
+
+#### Rota PRIVADA para listagem de treinos do estudante
+
+```http
+  GET /api/:id/workouts
+```
+
+Response JSON (exemplo)
+```http
+ {
+  "student_id": 1,
+  "student_name": "pedro",
+  "workouts": {
+    "SEGUNDA": [
+      {
+        "exercise_id": 3,
+        "repetitions": 15,
+        "weight": "10.50",
+        "break_time": 50,
+        "observations": null,
+        "time": 10,
+        "exercise": {
+          "id": 3,
+          "description": "supino"
+        }
+      },
+      {
+        "exercise_id": 1,
+        "repetitions": 15,
+        "weight": "10.50",
+        "break_time": 50,
+        "observations": null,
+        "time": 10,
+        "exercise": {
+          "id": 1,
+          "description": "remada"
+        }
+      },
+      {
+        "exercise_id": 2,
+        "repetitions": 15,
+        "weight": "10.50",
+        "break_time": 50,
+        "observations": null,
+        "time": 10,
+        "exercise": {
+          "id": 2,
+          "description": "leg"
+        }
+      }
+    ],
+    "TERÇA": [
+      {
+        "exercise_id": 3,
+        "repetitions": 15,
+        "weight": "10.50",
+        "break_time": 50,
+        "observations": null,
+        "time": 10,
+        "exercise": {
+          "id": 3,
+          "description": "supino"
+        }
+      },
+      {
+        "exercise_id": 1,
+        "repetitions": 15,
+        "weight": "10.50",
+        "break_time": 50,
+        "observations": null,
+        "time": 10,
+        "exercise": {
+          "id": 1,
+          "description": "remada"
+        }
+      },
+      {
+        "exercise_id": 2,
+        "repetitions": 15,
+        "weight": "10.50",
+        "break_time": 50,
+        "observations": null,
+        "time": 10,
+        "exercise": {
+          "id": 2,
+          "description": "leg"
+        }
+      }
+    ],
+    "QUARTA": [
+      {
+        "exercise_id": 3,
+        "repetitions": 15,
+        "weight": "10.50",
+        "break_time": 50,
+        "observations": null,
+        "time": 10,
+        "exercise": {
+          "id": 3,
+          "description": "supino"
+        }
+      },
+      {
+        "exercise_id": 1,
+        "repetitions": 15,
+        "weight": "10.50",
+        "break_time": 50,
+        "observations": null,
+        "time": 10,
+        "exercise": {
+          "id": 1,
+          "description": "remada"
+        }
+      },
+      {
+        "exercise_id": 2,
+        "repetitions": 15,
+        "weight": "10.50",
+        "break_time": 50,
+        "observations": null,
+        "time": 10,
+        "exercise": {
+          "id": 2,
+          "description": "leg"
+        }
+      }
+    ],
+    "QUINTA": [
+      {
+        "exercise_id": 3,
+        "repetitions": 15,
+        "weight": "10.50",
+        "break_time": 50,
+        "observations": null,
+        "time": 10,
+        "exercise": {
+          "id": 3,
+          "description": "supino"
+        }
+      },
+      {
+        "exercise_id": 1,
+        "repetitions": 15,
+        "weight": "10.50",
+        "break_time": 50,
+        "observations": null,
+        "time": 10,
+        "exercise": {
+          "id": 1,
+          "description": "remada"
+        }
+      },
+      {
+        "exercise_id": 2,
+        "repetitions": 15,
+        "weight": "10.50",
+        "break_time": 50,
+        "observations": null,
+        "time": 10,
+        "exercise": {
+          "id": 2,
+          "description": "leg"
+        }
+      },
+      {
+        "exercise_id": 4,
+        "repetitions": 15,
+        "weight": "10.50",
+        "break_time": 50,
+        "observations": null,
+        "time": 10,
+        "exercise": {
+          "id": 4,
+          "description": "agachamento"
+        }
+      }
+    ],
+    "SEXTA": [
+      {
+        "exercise_id": 3,
+        "repetitions": 15,
+        "weight": "10.50",
+        "break_time": 50,
+        "observations": null,
+        "time": 10,
+        "exercise": {
+          "id": 3,
+          "description": "supino"
+        }
+      },
+      {
+        "exercise_id": 1,
+        "repetitions": 15,
+        "weight": "10.50",
+        "break_time": 50,
+        "observations": null,
+        "time": 10,
+        "exercise": {
+          "id": 1,
+          "description": "remada"
+        }
+      },
+      {
+        "exercise_id": 2,
+        "repetitions": 15,
+        "weight": "10.50",
+        "break_time": 50,
+        "observations": null,
+        "time": 10,
+        "exercise": {
+          "id": 2,
+          "description": "leg"
+        }
+      },
+      {
+        "exercise_id": 4,
+        "repetitions": 15,
+        "weight": "10.50",
+        "break_time": 50,
+        "observations": null,
+        "time": 10,
+        "exercise": {
+          "id": 4,
+          "description": "agachamento"
+        }
+      }
+    ],
+    "SÁBADO": [],
+    "DOMINGO": []
+  }
+}
+```
+
+| Response Status | Descrição         |
+| :-------------- | :---------------- |
+| `200`           | sucesso (ok)  |
+
+##
+
+#### Rota PRIVADA para listar um estudante por id
+```http
+  GET /api/students/:id
+```
+Response JSON (exemplo)
+
+```http
+{
+  "id": 1,
+  "name": "pedro",
+  "email": "pedro@gmail.com",
+  "date_birth": "1990-08-25",
+  "cpf": "12339413321",
+  "contact": "00000000000",
+  "address": {
+    "cep": "12345-678",
+    "street": "rua a",
+    "state": "CE",
+    "neighborhood": "centro",
+    "city": "pacajus",
+    "number": "001"
+  }
+}
+```
+
+| Response Status | Descrição         |
+| :-------------- | :---------------- |
+| `200`           | sucesso (ok)  |
+
+##
+
+
+#### Rota PRIVADA para gerar o PDF com o treino da semana de um estudante
+```http
+  GET /api/students/export?student_id=:id
+```
+-Enviar QUERY PARAMS.
+    EX: no parametro a palavra `student_id` e no value a opção para pesquisar, por ex: `1`
+    
+-Link do arqui pdf gerado     
+        https://drive.google.com/file/d/1EGRGQ7E0KmuL0LPBW2MCEzThwzJHpiLK/view?usp=sharing
+    
+
+| Response Status | Descrição         |
+| :-------------- | :---------------- |
+| `200`           | sucesso (ok)  |
+
+##
+## DevInHouse SENAI
+### Projeto Avaliativo do Módulo 2
+
+
+
 
 ## Autor
 
-|                                                                                            |                                                                       |
-| :----------------------------------------------------------------------------------------- | :-------------------------------------------------------------------- |
-| <img src="https://avatars.githubusercontent.com/u/86934710?v=4" width="50%" height="50%"/> | Alexandre Mariano :: [@devmariano](https://www.github.com/devmariano) |
+
+| <img src="https://avatars.githubusercontent.com/u/60064600?v=4" width="50%" height="50%"/> | Natanael Batista  :: (https://www.github.com/devmariano) |
 
 ###
 
-![Logo](https://raw.githubusercontent.com/devmariano/project_files_repo/main/labMedicine_logo6.jpg)
+
