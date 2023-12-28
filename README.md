@@ -72,11 +72,11 @@ php artisan db:seed PopulatePlans
 composer require barryvdh/laravel-dompdf
 ```
 
-## 🚑📗 Documentação da API
+##  Documentação da API
 
 ##
 
-### 🚥 Endpoints - Rotas
+### Endpoints - Rotas
 
 ##
 
@@ -832,11 +832,10 @@ Response JSON (exemplo)
 
 
 
-
 ## Autor
 
 
-| <img src="https://avatars.githubusercontent.com/u/60064600?v=4" width="50%" height="50%"/> | Natanael Batista  :: (https://www.github.com/devmariano) |
+| Natanael Batista Guilherme |  https://www.github.com/natanaelbguilherme |
 
 ###
 
