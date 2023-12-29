@@ -141,7 +141,6 @@ class StudentController extends Controller
                 ],
 
                 'contact' => [
-                    'required',
                     'max:20',
                     Rule::unique('students')->ignore($student->id),
                 ],
