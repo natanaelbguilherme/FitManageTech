@@ -8,7 +8,7 @@ Projeto foi desenvolvido utilizando a linguagem PHP com frameword Laravel, e o b
 
 ### Vídeo de apresentação:
 
--LINK DO VÍDEO
+https://drive.google.com/file/d/1ETK4TztPOLecXj-YXtiqb3rqfoIhFFy8/view?usp=sharing
 
 ### Segue abaixo as bibliotecas externas utilizadas:
 
