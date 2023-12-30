@@ -8,7 +8,7 @@ Projeto foi desenvolvido utilizando a linguagem PHP com frameword Laravel, e o b
 
 ### Vídeo de apresentação:
 
-https://drive.google.com/file/d/1TgatvSkL_zVhRnYMggKyW_LDfgEGhQm4/view?usp=share_link
+-LINK DO VÍDEO
 
 ### Segue abaixo as bibliotecas externas utilizadas:
 
@@ -818,7 +818,7 @@ Response JSON (exemplo)
 -Enviar QUERY PARAMS.
     EX: no parametro a palavra `student_id` e no value a opção para pesquisar, por ex: `1`
     
--Link do arqui pdf gerado     
+-Link do arquivo pdf gerado     
         https://drive.google.com/file/d/1EGRGQ7E0KmuL0LPBW2MCEzThwzJHpiLK/view?usp=sharing
     
 
