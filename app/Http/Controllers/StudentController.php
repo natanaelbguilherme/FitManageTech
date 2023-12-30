@@ -20,11 +20,15 @@ class StudentController extends Controller
 
         $search = $request->input('filter');
 
+        if (!$search)  return Student::where('user_id', $user_id)->get();
+
         $students = Student::query()
             ->where('user_id', $user_id)
             ->where('name', 'ilike', "%$search%")
-            ->orWhere('cpf', 'ilike', "%$search%")
-            ->orWhere('email', 'ilike', "%$search%")
+            ->orwhere('user_id', $user_id)
+            ->where('cpf', 'ilike', "%$search%")
+            ->orwhere('user_id', $user_id)
+            ->Where('email', 'ilike', "%$search%")
             ->orderBy('name', 'asc')
             ->get();
 
